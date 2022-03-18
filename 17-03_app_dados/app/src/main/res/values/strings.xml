@@ -5,4 +5,6 @@
     <string name="_20_lados">20 lados</string>
     <string name="escolha_um_tipo_de_dado">ESCOLHA UM TIPO DE DADO:</string>
     <string name="triple_dice">Triple Dice</string>
+    <string name="rolar">Rolar</string>
+    <string name="voltar">Voltar</string>
 </resources>
