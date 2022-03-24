@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/TI/Generation/projects_GenerationBR/21-03_To_Do_List/app/src/main/res/layout/activity_main.xml" value="0.15" />
+        <entry key="..\:/TI/Generation/projects_GenerationBR/21-03_To_Do_List/app/src/main/res/layout/card_layout_tarefa.xml" value="0.1762917933130699" />
+        <entry key="..\:/TI/Generation/projects_GenerationBR/21-03_To_Do_List/app/src/main/res/layout/fragment_form.xml" value="0.25" />
+        <entry key="..\:/TI/Generation/projects_GenerationBR/21-03_To_Do_List/app/src/main/res/layout/fragment_list.xml" value="0.1762917933130699" />
         <entry key="..\:/Users/Daniel/AndroidStudioProjects/ToDoList/app/src/main/res/layout/activity_main.xml" value="0.27685185185185185" />
         <entry key="..\:/Users/Daniel/AndroidStudioProjects/ToDoList/app/src/main/res/layout/card_layout_tarefa.xml" value="0.25" />
         <entry key="..\:/Users/Daniel/AndroidStudioProjects/ToDoList/app/src/main/res/layout/fragment_list.xml" value="0.2" />

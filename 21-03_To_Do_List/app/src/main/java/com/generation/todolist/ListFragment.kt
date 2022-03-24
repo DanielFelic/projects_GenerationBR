@@ -5,61 +5,40 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.generation.todolist.adapter.TarefaAdapter
+import com.generation.todolist.databinding.FragmentListBinding
 import com.generation.todolist.model.Tarefa
 
 
 class ListFragment : Fragment() {
+
+    private lateinit var binding: FragmentListBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.fragment_list, container, false)
-
-        val listTarefas = mutableListOf(
-            Tarefa(
-                "Estudar Pentest",
-                "Estudar para certificado eJPT",
-                "Daniel",
-                "2022-22-03",
-                false,
-                "Estudo"
-            ),
-            Tarefa(
-                "Levar lixo",
-                "Levar lixo da semana",
-                "Daniel",
-                "2022-24-03",
-                false,
-                "Dia a dia"
-            ),
-            Tarefa(
-                "Lavar Roupa",
-                "Lavar roupas pretas e coloridas",
-                "Daniel",
-                "2022-26-03",
-                false,
-                "Dia a dia"
-            )
+        binding = FragmentListBinding.inflate(
+            layoutInflater, container, false
         )
 
-        val recyclerTarefa = view.findViewById<RecyclerView>(R.id.recyclerTarefa)
 
         val adapter = TarefaAdapter()
 
-        recyclerTarefa.layoutManager = LinearLayoutManager(context)
+        binding.recyclerTarefa.layoutManager = LinearLayoutManager(context)
 
-        recyclerTarefa.adapter = adapter
+        binding.recyclerTarefa.adapter = adapter
 
-        recyclerTarefa.setHasFixedSize(true)
+        binding.recyclerTarefa.setHasFixedSize(true)
 
-        adapter.setLista(listTarefas)
-
-        return view
+        binding.floatingActionButton.setOnClickListener {
+            findNavController().navigate(R.id.action_listFragment_to_formFragment)
+        }
+        return binding.root
     }
 
 }
