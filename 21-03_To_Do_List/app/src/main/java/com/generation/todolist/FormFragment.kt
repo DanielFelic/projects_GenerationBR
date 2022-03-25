@@ -6,12 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.generation.todolist.databinding.FragmentFormBinding
 import com.generation.todolist.databinding.FragmentListBinding
+import com.generation.todolist.fragment.DatePickerFragment
+import com.generation.todolist.fragment.TimePickerListener
+import com.generation.todolist.model.Categoria
+import java.time.LocalDate
 
-class FormFragment : Fragment() {
+class FormFragment : Fragment(), TimePickerListener {
 
     private lateinit var binding: FragmentFormBinding
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -26,13 +31,38 @@ class FormFragment : Fragment() {
 
         mainViewModel.myCategoriaResponse.observe(viewLifecycleOwner){
             response -> Log.d("Requisição", response.body().toString())
+            spinnerCategoria(response.body())
         }
+
+        mainViewModel.dataSelecionada.observe(viewLifecycleOwner, {
+            selectedDate -> binding.editData.setText(selectedDate.toString())
+        })
 
         binding.buttonSalvar.setOnClickListener {
             findNavController().navigate(R.id.action_formFragment_to_listFragment)
         }
 
+        binding.editData.setOnClickListener {
+            DatePickerFragment(this)
+                .show(parentFragmentManager, "DatePicker")
+        }
+
         return binding.root
+    }
+
+    fun spinnerCategoria(categorias: List<Categoria>?){
+
+        if(categorias != null){
+            binding.spinnerCategoria.adapter = ArrayAdapter(
+                requireContext(),
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+                categorias
+            )
+        }
+    }
+
+    override fun onTimeSelected(date: LocalDate) {
+        mainViewModel.dataSelecionada.value = date
     }
 
 }
