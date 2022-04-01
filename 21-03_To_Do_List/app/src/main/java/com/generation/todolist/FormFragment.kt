@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.generation.todolist.databinding.FragmentFormBinding
@@ -14,11 +16,13 @@ import com.generation.todolist.databinding.FragmentListBinding
 import com.generation.todolist.fragment.DatePickerFragment
 import com.generation.todolist.fragment.TimePickerListener
 import com.generation.todolist.model.Categoria
+import com.generation.todolist.model.Tarefa
 import java.time.LocalDate
 
 class FormFragment : Fragment(), TimePickerListener {
 
     private lateinit var binding: FragmentFormBinding
+    private var categoriaSelecionada = 0L
     private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -47,6 +51,10 @@ class FormFragment : Fragment(), TimePickerListener {
                 .show(parentFragmentManager, "DatePicker")
         }
 
+        binding.buttonSalvar.setOnClickListener {
+            inserirNoBanco()
+        }
+
         return binding.root
     }
 
@@ -58,6 +66,61 @@ class FormFragment : Fragment(), TimePickerListener {
                 androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
                 categorias
             )
+            
+            binding.spinnerCategoria.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener{
+                    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                        val categoriaSelecionadaFun =
+                            binding.spinnerCategoria.selectedItem as Categoria
+
+                        categoriaSelecionada = categoriaSelecionadaFun.id
+                    }
+
+                    override fun onNothingSelected(p0: AdapterView<*>?) {
+                        TODO("Not yet implemented")
+                    }
+
+                }
+        }
+    }
+
+    fun validarCampos(
+        nome: String, desc: String, responsavel: String,
+        data: String
+    ): Boolean{
+
+        return !(
+                (nome == "" || nome.length < 3 || nome.length > 30)
+                        || (desc == "" || desc.length < 5 || desc.length > 200)
+                        || (responsavel == "" || responsavel.length < 3 || responsavel.length > 20)
+                        || data == ""
+                )
+    }
+
+    fun inserirNoBanco(){
+
+        val nome = binding.editNome.text.toString()
+        val desc = binding.editDesc.text.toString()
+        val responsavel = binding.editResp.text.toString()
+        val data = binding.editData.text.toString()
+        val status = binding.switchAtivo.isChecked
+        val categoria = Categoria(categoriaSelecionada, null, null)
+
+        if (validarCampos(nome, desc, responsavel, data)){
+            val tarefa = Tarefa(
+                0, nome, desc, responsavel, data, status, categoria
+            )
+            mainViewModel.addTarefa(tarefa)
+            Toast.makeText(
+                context, "Tarefa Salva!",
+                Toast.LENGTH_LONG
+            ).show()
+            findNavController().navigate(R.id.action_formFragment_to_listFragment)
+        }else{
+            Toast.makeText(
+                context, "Preencha os campos corretamente!",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
