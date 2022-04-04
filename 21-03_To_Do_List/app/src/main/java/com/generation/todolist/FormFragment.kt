@@ -23,6 +23,7 @@ class FormFragment : Fragment(), TimePickerListener {
 
     private lateinit var binding: FragmentFormBinding
     private var categoriaSelecionada = 0L
+    private var tarefaSelecionada: Tarefa? = null
     private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -32,6 +33,8 @@ class FormFragment : Fragment(), TimePickerListener {
         // Inflate the layout for this fragment
 
         binding = FragmentFormBinding.inflate(layoutInflater, container, false)
+
+        carregarDados()
 
         mainViewModel.myCategoriaResponse.observe(viewLifecycleOwner){
             response -> Log.d("Requisição", response.body().toString())
@@ -107,10 +110,18 @@ class FormFragment : Fragment(), TimePickerListener {
         val categoria = Categoria(categoriaSelecionada, null, null)
 
         if (validarCampos(nome, desc, responsavel, data)){
-            val tarefa = Tarefa(
-                0, nome, desc, responsavel, data, status, categoria
-            )
-            mainViewModel.addTarefa(tarefa)
+            if (tarefaSelecionada == null){
+                val tarefa = Tarefa(
+                    0, nome, desc, responsavel, data, status, categoria
+                )
+                mainViewModel.addTarefa(tarefa)
+            }else{
+                val tarefa = Tarefa(
+                    tarefaSelecionada?.id!!,
+                    nome, desc, responsavel, data, status, categoria
+                )
+                mainViewModel.updateTarefa(tarefa)
+            }
             Toast.makeText(
                 context, "Tarefa Salva!",
                 Toast.LENGTH_LONG
@@ -126,6 +137,22 @@ class FormFragment : Fragment(), TimePickerListener {
 
     override fun onTimeSelected(date: LocalDate) {
         mainViewModel.dataSelecionada.value = date
+    }
+
+    private fun carregarDados() {
+        tarefaSelecionada = mainViewModel.tarefaSelecionada
+        if (tarefaSelecionada != null){
+            binding.editNome.setText(tarefaSelecionada?.nome)
+            binding.editDesc.setText(tarefaSelecionada?.descricao)
+            binding.editResp.setText(tarefaSelecionada?.responsavel)
+            binding.editData.setText(tarefaSelecionada?.data)
+            binding.switchAtivo.isChecked = tarefaSelecionada?.status!!
+        }else{
+            binding.editNome.text = null
+            binding.editDesc.text = null
+            binding.editResp.text = null
+            binding.editData.text = null
+        }
     }
 
 }

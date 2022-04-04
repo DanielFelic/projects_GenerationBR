@@ -10,11 +10,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.generation.todolist.adapter.TarefaAdapter
+import com.generation.todolist.adapter.TaskItemClickListener
 import com.generation.todolist.databinding.FragmentListBinding
 import com.generation.todolist.model.Tarefa
 
 
-class ListFragment : Fragment() {
+class ListFragment : Fragment(), TaskItemClickListener {
 
     private val mainViewModel : MainViewModel by activityViewModels()
 
@@ -32,7 +33,7 @@ class ListFragment : Fragment() {
         )
 
 
-        val adapter = TarefaAdapter()
+        val adapter = TarefaAdapter(this, mainViewModel)
 
         binding.recyclerTarefa.layoutManager = LinearLayoutManager(context)
 
@@ -41,6 +42,7 @@ class ListFragment : Fragment() {
         binding.recyclerTarefa.setHasFixedSize(true)
 
         binding.floatingActionButton.setOnClickListener {
+            mainViewModel.tarefaSelecionada = null
             findNavController().navigate(R.id.action_listFragment_to_formFragment)
         }
 
@@ -51,6 +53,11 @@ class ListFragment : Fragment() {
         })
 
         return binding.root
+    }
+
+    override fun onTaskClicked(tarefa: Tarefa) {
+        mainViewModel.tarefaSelecionada = tarefa
+        findNavController().navigate(R.id.action_listFragment_to_formFragment)
     }
 
 }
